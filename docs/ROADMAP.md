@@ -92,14 +92,34 @@ tests passing.
   daily totals would be cheaper. Tiles open the matching filtered orders or
   products. No new indexes, rules or functions.
 
-### Sprint 6: Customers
+### Sprint 6: Customers (done)
 - Read-only customer list with search, detail with order history.
 - Account disable through an admin Cloud Function (customer repo), if wanted.
+- Notes: the list keeps up to 2,000 profiles live (admins left out) and
+  searches name, email and phone in memory. The detail shows contact
+  details, saved addresses, the last 100 orders (existing `customerId` +
+  `createdAt` index) and totals; "Spent" counts sales only. **Customer
+  repo:** `adminSetCustomerDisabled` disables the Auth account, revokes its
+  sessions and records `disabled` on the profile; admins can't disable
+  themselves or other admins. Every server call now checks for revoked
+  tokens, so a disabled customer is refused at once. Rules stop customers
+  writing `disabled`. Open orders stay open (cancel them under Orders).
 
-### Sprint 7: Polish and release
+### Sprint 7: Polish and release (done)
 - Accessibility pass, empty and error states, flow test end to end.
 - README with screenshots, launcher icon and splash for "Your Shop Admin".
 - Release signing, web build for Firebase Hosting, release notes.
+- Notes: accessibility tests check tap targets (48 dp), labels and WCAG AA
+  text contrast on 11 screens in both themes. They found and fixed 44 dp
+  top-bar buttons, small filter pills, a 40 dp remove-image button,
+  selectable text acting as tiny targets, and muted text at 4.15:1 (now
+  `grey550`, 4.5:1 or more on every cream surface; this differs from the
+  customer app's palette). Every list has loading, empty, error and
+  no-match states. One end-to-end flow covers sign-in, dashboard, confirming
+  an order, restocking, disabling a customer and sign-out. Icon and splash:
+  the shop's mark inverted (cream on charcoal). Web: clean path URLs, Hosting
+  target `admin` with SPA rewrite, no-cache HTML/JS and `noindex`. See
+  [RELEASE.md](RELEASE.md) and [RELEASE_NOTES.md](RELEASE_NOTES.md).
 
 ## Owner to-dos (not done by me)
 
@@ -109,6 +129,10 @@ tests passing.
   the file, and the web build uses the old web config.
 - Make sure real admin accounts have `isAdmin: true` before the rules deploy.
 - Blaze plan, Storage enabled, then `firebase deploy --only
-  functions,firestore,storage` from the customer repo after Sprint 2 and 3.
+  functions,firestore,storage` from the customer repo (Sprints 2, 3, 4 and 6
+  all need it).
+- Create the Hosting site and add it to Auth's authorized domains, then
+  `firebase deploy --only hosting:admin` (see [RELEASE.md](RELEASE.md)).
+- Upload keystore and `android/key.properties` for a signed Android build.
 - Payments: Stripe doesn't onboard Bangladeshi merchants; bKash or
   SSLCommerz needs merchant credentials.

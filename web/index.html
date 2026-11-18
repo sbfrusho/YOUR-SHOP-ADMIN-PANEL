@@ -18,7 +18,11 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Admin panel for the Your Shop store.">
+  <!-- Private tool: keep it out of search results. -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#F7F2EA" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161513" media="(prefers-color-scheme: dark)">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -31,6 +35,13 @@
 
   <title>Your Shop Admin</title>
   <link rel="manifest" href="manifest.json">
+  <!-- Page colour while Flutter loads (no white flash), as in the app. -->
+  <style>
+    html, body { margin: 0; height: 100%; background: #F7F2EA; }
+    @media (prefers-color-scheme: dark) {
+      html, body { background: #161513; }
+    }
+  </style>
 </head>
 <body>
   <!--

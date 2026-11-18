@@ -161,22 +161,26 @@ class _FilterPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Container(
-      height: 36,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: active ? scheme.secondaryContainer : null,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: scheme.outlineVariant),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 16),
-          const SizedBox(width: 6),
-          Text(label.tr, style: Theme.of(context).textTheme.labelLarge),
-          const Icon(Icons.arrow_drop_down_rounded, size: 20),
-        ],
+    // 36 high to look like a chip; the padding makes the tap target 48.
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Container(
+        height: 36,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: active ? scheme.secondaryContainer : null,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: scheme.outlineVariant),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16),
+            const SizedBox(width: 6),
+            Text(label.tr, style: Theme.of(context).textTheme.labelLarge),
+            const Icon(Icons.arrow_drop_down_rounded, size: 20),
+          ],
+        ),
       ),
     );
   }

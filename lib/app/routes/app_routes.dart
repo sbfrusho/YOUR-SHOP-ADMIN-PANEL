@@ -18,4 +18,7 @@ abstract final class AppRoutes {
   static const categoryNew = '/categories/new';
   static const categoryEdit = '/categories/edit/:id';
   static String categoryEditFor(String id) => '/categories/edit/$id';
+
+  static const customerDetail = '/customers/:id';
+  static String customerDetailFor(String id) => '/customers/$id';
 }

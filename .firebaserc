@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "nabilrayhanshopping"
+  },
+  "targets": {
+    "nabilrayhanshopping": {
+      "hosting": {
+        "admin": [
+          "yourshop-admin"
+        ]
+      }
+    }
+  }
+}

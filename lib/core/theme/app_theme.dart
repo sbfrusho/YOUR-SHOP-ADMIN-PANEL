@@ -37,7 +37,7 @@ abstract final class AppTheme {
       onErrorContainer: Color(0xFF5B1F17),
       surface: AppColors.cream100,
       onSurface: AppColors.grey900,
-      onSurfaceVariant: AppColors.grey500,
+      onSurfaceVariant: AppColors.grey550,
       surfaceContainerLowest: AppColors.cream50,
       surfaceContainerLow: AppColors.cream50,
       surfaceContainer: AppColors.cream50,

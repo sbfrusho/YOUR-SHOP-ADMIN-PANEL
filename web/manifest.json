@@ -3,10 +3,10 @@
     "short_name": "Your Shop Admin",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
-    "orientation": "portrait-primary",
+    "background_color": "#F7F2EA",
+    "theme_color": "#22201E",
+    "description": "Admin panel for the Your Shop store.",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {

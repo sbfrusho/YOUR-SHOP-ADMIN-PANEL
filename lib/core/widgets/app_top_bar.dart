@@ -102,7 +102,7 @@ class AppIconButton extends StatelessWidget {
     required this.onPressed,
     this.tooltip,
     this.selected = false,
-    this.size = 44,
+    this.size = 48, // Minimum tap target (Material / Android).
     this.badgeCount = 0,
   });
 

@@ -5,11 +5,11 @@ import '../../../app/routes/app_routes.dart';
 import '../../../core/widgets/app_top_bar.dart';
 import '../../../core/widgets/brand/app_logo.dart';
 import '../../catalogue/views/catalogue_view.dart';
+import '../../customers/views/customers_view.dart';
 import '../../dashboard/views/dashboard_view.dart';
 import '../../orders/views/orders_view.dart';
 import '../../products/views/products_view.dart';
 import '../view_models/shell_view_model.dart';
-import 'section_placeholder_view.dart';
 
 /// Responsive admin shell: a side rail at [ShellViewModel.wideBreakpoint]
 /// and wider (tablets, web), a bottom navigation bar on phones.
@@ -64,10 +64,7 @@ class ShellView extends GetView<ShellViewModel> {
     AdminSection.orders => const OrdersView(),
     AdminSection.products => const ProductsView(),
     AdminSection.catalogue => const CatalogueView(),
-    AdminSection.customers => const SectionPlaceholderView(
-      section: AdminSection.customers,
-      message: 'Customers and their order history arrive in Sprint 6.',
-    ),
+    AdminSection.customers => const CustomersView(),
   };
 }
 

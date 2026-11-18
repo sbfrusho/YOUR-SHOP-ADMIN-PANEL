@@ -3,10 +3,7 @@
 //   flutter test tool/screenshots_test.dart --update-goldens
 //
 // Output: tool/screenshots/*.png (not part of the normal test run).
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:your_shop_admin/app/routes/app_pages.dart';
@@ -15,34 +12,8 @@ import 'package:your_shop_admin/core/theme/app_theme.dart';
 import 'package:your_shop_admin/modules/catalogue/view_models/catalogue_view_model.dart';
 import 'package:your_shop_admin/modules/shell/view_models/shell_view_model.dart';
 
+import '../test/fonts.dart';
 import '../test/helpers.dart';
-
-Future<void> _loadFonts() async {
-  Future<void> load(String family, List<String> files) async {
-    final loader = FontLoader(family);
-    for (final f in files) {
-      loader.addFont(
-        Future.value(ByteData.sublistView(File(f).readAsBytesSync())),
-      );
-    }
-    await loader.load();
-  }
-
-  const dir = 'assets/fonts';
-  await load('Manrope', [
-    for (final w in ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold'])
-      '$dir/Manrope-$w.ttf',
-  ]);
-  await load('PlayfairDisplay', [
-    '$dir/PlayfairDisplay-SemiBold.ttf',
-    '$dir/PlayfairDisplay-Bold.ttf',
-  ]);
-  final flutterRoot =
-      Platform.environment['FLUTTER_ROOT'] ?? '/opt/homebrew/share/flutter';
-  await load('MaterialIcons', [
-    '$flutterRoot/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf',
-  ]);
-}
 
 /// Phone: 1080×2340 at 3x. Tablet / web: 2560×1600 at 2x.
 const _phone = Size(1080, 2340);
@@ -179,6 +150,37 @@ Future<void> _seed(TestBackend b) async {
     total: 650,
     createdAt: DateTime(2026, 11, 15, 19, 48),
   );
+  await b.addCustomer(
+    'c1',
+    'Nusrat Jahan',
+    phone: '01712-345678',
+    addresses: [
+      {
+        'label': 'Home',
+        'fullName': 'Nusrat Jahan',
+        'phone': '01712-345678',
+        'address': 'House 12, Road 5',
+        'city': 'Dhanmondi, Dhaka',
+        'postalCode': '1205',
+        'country': 'Bangladesh',
+        'isDefault': true,
+      },
+      {
+        'label': 'Office',
+        'fullName': 'Nusrat Jahan',
+        'phone': '01712-345678',
+        'address': 'Level 7, Gulshan Avenue',
+        'city': 'Dhaka',
+        'postalCode': '1212',
+        'country': 'Bangladesh',
+      },
+    ],
+  );
+  await b.addCustomer('c2', 'Rahim Uddin', phone: '01819-552310');
+  await b.addCustomer('c3', 'Farhana Akter', phone: '01911-208877');
+  await b.addCustomer('c4', 'Tanvir Hasan', phone: '01552-731004');
+  await b.addCustomer('c5', 'Sadia Islam', disabled: true);
+  await b.addCustomer('c6', 'Mehedi Hasan', email: 'mehedi.h@mail.test');
   // Older delivered orders so the dashboard chart has a shape.
   const history = [
     (6, 1890.0),
@@ -214,7 +216,7 @@ Future<void> _seed(TestBackend b) async {
 void main() {
   setUpAll(() async {
     mockPathProvider();
-    await _loadFonts();
+    await loadAppFonts();
   });
   tearDown(Get.reset);
 
@@ -404,5 +406,41 @@ void main() {
   testWidgets(
     'dashboard wide',
     (t) => _shot(t, '23_dashboard_wide', route: AppRoutes.shell, size: _wide),
+  );
+  testWidgets(
+    'customers',
+    (t) => _shot(
+      t,
+      '24_customers',
+      route: AppRoutes.shell,
+      section: AdminSection.customers,
+    ),
+  );
+  testWidgets(
+    'customers wide',
+    (t) => _shot(
+      t,
+      '25_customers_wide',
+      route: AppRoutes.shell,
+      size: _wide,
+      section: AdminSection.customers,
+    ),
+  );
+  testWidgets(
+    'customer detail wide',
+    (t) => _shot(
+      t,
+      '26_customer_detail_wide',
+      route: AppRoutes.customerDetailFor('c1'),
+      size: _wide,
+    ),
+  );
+  testWidgets(
+    'customer detail',
+    (t) => _shot(
+      t,
+      '27_customer_detail',
+      route: AppRoutes.customerDetailFor('c1'),
+    ),
   );
 }

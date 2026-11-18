@@ -19,6 +19,10 @@ abstract final class AppColors {
   static const grey700 = Color(0xFF3D3A36);
   static const grey600 = Color(0xFF56524C);
   static const grey500 = Color(0xFF7A746C);
+
+  /// Muted text in light mode: the lightest grey with WCAG AA contrast
+  /// (4.5:1) on every cream surface (grey500 is 4.15:1 on cream100).
+  static const grey550 = Color(0xFF6E685F);
   static const grey400 = Color(0xFFA39C92);
   static const grey300 = Color(0xFFC9C2B8);
 

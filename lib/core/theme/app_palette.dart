@@ -32,7 +32,7 @@ class AppPalette extends ThemeExtension<AppPalette> {
     warning: AppColors.ochre,
     info: AppColors.slate,
     accent: AppColors.sand,
-    mutedText: AppColors.grey500,
+    mutedText: AppColors.grey550,
     skeleton: AppColors.cream200,
     imageBackground: AppColors.cream200,
   );

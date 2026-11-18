@@ -322,7 +322,6 @@ class _ImageTile extends StatelessWidget {
             right: 4,
             top: 4,
             child: IconButton.filledTonal(
-              visualDensity: VisualDensity.compact,
               iconSize: 18,
               tooltip: 'Remove image'.tr,
               onPressed: onRemove,

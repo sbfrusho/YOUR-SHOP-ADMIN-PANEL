@@ -17,6 +17,8 @@ class UserModel {
     this.postalCode = '',
     this.address = '',
     this.photoUrl = '',
+    this.disabled = false,
+    this.disabledAt,
   });
 
   final String uid;
@@ -35,6 +37,37 @@ class UserModel {
   /// Profile photo in Firebase Storage (`users/{uid}/avatar.jpg`).
   final String photoUrl;
 
+  /// Set by the `adminSetCustomerDisabled` Cloud Function; the Auth
+  /// account is disabled too, so the customer can't sign in.
+  final bool disabled;
+  final DateTime? disabledAt;
+
+  /// Name to show, falling back to the email.
+  String get displayName => name.trim().isEmpty ? email : name.trim();
+
+  /// Up to two initials for an avatar placeholder.
+  String get initials {
+    final parts = displayName
+        .split(RegExp(r'[\s@._-]+'))
+        .where((p) => p.isNotEmpty)
+        .toList();
+    if (parts.isEmpty) return '?';
+    final first = parts.first[0];
+    final second = parts.length > 1 ? parts[1][0] : '';
+    return (first + second).toUpperCase();
+  }
+
+  /// Whether [query] (lower case) matches the name, email or phone.
+  bool matchesQuery(String query) {
+    if (query.isEmpty) return true;
+    final digits = query.replaceAll(RegExp('[^0-9]'), '');
+    return name.toLowerCase().contains(query) ||
+        email.toLowerCase().contains(query) ||
+        uid.toLowerCase() == query ||
+        (digits.length >= 3 &&
+            phone.replaceAll(RegExp('[^0-9]'), '').contains(digits));
+  }
+
   factory UserModel.fromMap(Map<String, dynamic> map, {String? uid}) =>
       UserModel(
         uid: asString(map['uId'], fallback: uid ?? ''),
@@ -50,6 +83,8 @@ class UserModel {
         postalCode: asString(map['postalCode']),
         address: asString(map['adress']),
         photoUrl: asString(map['photoUrl']),
+        disabled: asBool(map['disabled']),
+        disabledAt: asDateTime(map['disabledAt']),
       );
 
   Map<String, dynamic> toMap() => {

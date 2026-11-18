@@ -23,6 +23,7 @@ import 'package:your_shop_admin/core/services/theme_service.dart';
 import 'package:your_shop_admin/core/theme/app_theme.dart';
 import 'package:your_shop_admin/data/repositories/auth_repository.dart';
 import 'package:your_shop_admin/data/repositories/catalog_repository.dart';
+import 'package:your_shop_admin/data/repositories/customer_repository.dart';
 import 'package:your_shop_admin/data/repositories/order_repository.dart';
 
 /// Gives the image cache a temp folder (no path_provider plugin in tests).
@@ -99,6 +100,29 @@ class TestBackend {
         'categoryImg': 'https://img.test/categories/$id.jpg',
       });
 
+  /// A customer profile (not an admin).
+  Future<void> addCustomer(
+    String uid,
+    String name, {
+    String? email,
+    String phone = '',
+    bool disabled = false,
+    List<Map<String, dynamic>> addresses = const [],
+  }) async {
+    final ref = db.collection('users').doc(uid);
+    await ref.set({
+      'uId': uid,
+      'name': name,
+      'email': email ?? '${name.split(' ').first.toLowerCase()}@mail.test',
+      'phone': phone,
+      'isAdmin': false,
+      if (disabled) 'disabled': true,
+    });
+    for (final (i, a) in addresses.indexed) {
+      await ref.collection('addresses').doc('a$i').set(a);
+    }
+  }
+
   /// A banner; [order] `null` is a legacy banner without a position.
   Future<void> addBanner(String id, {int? order, DateTime? createdAt}) =>
       db.collection('banners').doc(id).set({
@@ -147,7 +171,18 @@ class TestBackend {
     auth: auth,
     client: MockClient((req) async {
       calls.add(req);
-      final id = (jsonDecode(req.body) as Map)['orderId'] as String;
+      final body = jsonDecode(req.body) as Map;
+      if (req.url.path.endsWith('/adminSetCustomerDisabled')) {
+        final disabled = body['disabled'] == true;
+        await db.collection('users').doc(body['uid'] as String).update({
+          'disabled': disabled,
+          'disabledAt': disabled
+              ? Timestamp.fromDate(DateTime(2026, 11, 19))
+              : null,
+        });
+        return http.Response('{"disabled":$disabled}', 200);
+      }
+      final id = body['orderId'] as String;
       await db.collection('orders').doc(id).update({
         'status': 'Cancelled',
         'paymentStatus': 'void',
@@ -160,6 +195,7 @@ class TestBackend {
   /// Adds an order (and its items) and returns its ID.
   Future<String> addOrder({
     String id = 'order1abc',
+    String customerId = 'c1',
     String status = 'Pending',
     String paymentStatus = 'unpaid',
     String name = 'Nusrat Jahan',
@@ -188,7 +224,7 @@ class TestBackend {
   }) async {
     final ref = db.collection('orders').doc(id);
     await ref.set({
-      'customerId': 'c1',
+      'customerId': customerId,
       'uniqueId': customerDeleted
           ? ''
           : '${name.split(' ').first.toLowerCase()}@mail.test',
@@ -222,6 +258,10 @@ class TestBackend {
       permanent: true,
     );
     Get.put(CatalogRepository(firestore: db, images: images), permanent: true);
+    Get.put(
+      CustomerRepository(firestore: db, functions: functions),
+      permanent: true,
+    );
     Get.put<ImagePickerService>(picker, permanent: true);
     Get.put<Clock>(clock, permanent: true);
     final authService = Get.put(AuthService(auth: auth), permanent: true);

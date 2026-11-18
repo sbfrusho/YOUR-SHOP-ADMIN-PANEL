@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
 
   cached_network_image: ^4.0.7
   cloud_firestore: ^7.2.0
@@ -29,7 +31,9 @@ dev_dependencies:
     sdk: flutter
   fake_cloud_firestore: ^4.5.0
   firebase_auth_mocks: ^0.16.0
+  flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
+  flutter_native_splash: ^2.4.8
   mocktail: ^1.0.5
 
 flutter:
@@ -54,3 +58,26 @@ flutter:
           weight: 600
         - asset: assets/fonts/PlayfairDisplay-Bold.ttf
           weight: 700
+
+# Launcher icons: `dart run flutter_launcher_icons` (images from
+# tool/generate_brand_assets_test.dart).
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/branding/app_icon.png
+  adaptive_icon_background: "#22201E"
+  adaptive_icon_foreground: assets/branding/app_icon_foreground.png
+  adaptive_icon_monochrome: assets/branding/app_icon_monochrome.png
+  remove_alpha_ios: true
+  min_sdk_android: 24
+
+# Native splash: `dart run flutter_native_splash:create`. Charcoal in both
+# themes, matching the launcher icon. The web build has its own (index.html).
+flutter_native_splash:
+  color: "#22201E"
+  image: assets/branding/splash_logo.png
+  android_12:
+    color: "#22201E"
+    image: assets/branding/splash_android12.png
+    icon_background_color: "#22201E"
+  web: false

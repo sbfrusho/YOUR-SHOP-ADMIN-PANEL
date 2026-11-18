@@ -9,6 +9,9 @@ import '../../modules/auth/views/login_view.dart';
 import '../../modules/catalogue/view_models/catalogue_view_model.dart';
 import '../../modules/catalogue/view_models/category_form_view_model.dart';
 import '../../modules/catalogue/views/category_form_view.dart';
+import '../../modules/customers/view_models/customer_detail_view_model.dart';
+import '../../modules/customers/view_models/customers_view_model.dart';
+import '../../modules/customers/views/customer_detail_view.dart';
 import '../../modules/dashboard/view_models/dashboard_view_model.dart';
 import '../../modules/orders/view_models/order_detail_view_model.dart';
 import '../../modules/orders/view_models/orders_view_model.dart';
@@ -58,6 +61,7 @@ abstract final class AppPages {
         Get.put(OrdersViewModel(Get.find()));
         Get.put(ProductsViewModel(Get.find()));
         Get.put(CatalogueViewModel(Get.find(), Get.find()));
+        Get.put(CustomersViewModel(Get.find()));
       }),
       middlewares: [AdminMiddleware()],
     ),
@@ -118,6 +122,14 @@ abstract final class AppPages {
           Get.find(),
           categoryId: Get.parameters['id'],
         ),
+      ),
+      middlewares: [AdminMiddleware()],
+    ),
+    GetPage<void>(
+      name: AppRoutes.customerDetail,
+      page: CustomerDetailView.new,
+      binding: BindingsBuilder.put(
+        () => CustomerDetailViewModel(Get.find(), Get.parameters['id'] ?? ''),
       ),
       middlewares: [AdminMiddleware()],
     ),

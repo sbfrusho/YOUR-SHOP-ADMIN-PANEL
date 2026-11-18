@@ -38,6 +38,29 @@ class OrderRepository {
             s.docs.map((d) => OrderModel.fromMap(d.data(), id: d.id)).toList(),
       );
 
+  /// Orders placed from [from] on, newest first. A range and order on
+  /// `createdAt` alone, so no composite index is needed.
+  Stream<List<OrderModel>> watchOrdersSince(DateTime from) => _orders
+      .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(from))
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (s) =>
+            s.docs.map((d) => OrderModel.fromMap(d.data(), id: d.id)).toList(),
+      );
+
+  /// Every Pending or Confirmed order, however old (dashboard to-dos).
+  Stream<List<OrderModel>> watchOpenOrders() => _orders
+      .where(
+        'status',
+        whereIn: [OrderStatus.pending.label, OrderStatus.confirmed.label],
+      )
+      .snapshots()
+      .map(
+        (s) =>
+            s.docs.map((d) => OrderModel.fromMap(d.data(), id: d.id)).toList(),
+      );
+
   Stream<OrderModel?> watchOrder(String id) =>
       _orders.doc(id).snapshots().map((s) {
         final data = s.data();

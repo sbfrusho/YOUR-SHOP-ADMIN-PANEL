@@ -8,9 +8,11 @@ It shares the Firebase project `nabilrayhanshopping` with the customer app
 (`UTM_clothing_app`), which owns `firestore.rules`, `storage.rules` and the
 Cloud Functions. Only accounts with `users/{uid}.isAdmin == true` can sign in.
 
-| Sign in | Shell (phone) | Settings |
+![Dashboard on tablet / web](tool/screenshots/23_dashboard_wide.png)
+
+| Sign in | Dashboard (phone) | Settings |
 |---|---|---|
-| ![](tool/screenshots/01_login.png) | ![](tool/screenshots/03_shell.png) | ![](tool/screenshots/05_settings.png) |
+| ![](tool/screenshots/01_login.png) | ![](tool/screenshots/22_dashboard.png) | ![](tool/screenshots/05_settings.png) |
 
 | Orders | Order detail |
 |---|---|
@@ -18,6 +20,20 @@ Cloud Functions. Only accounts with `users/{uid}.isAdmin == true` can sign in.
 
 ![Orders on tablet / web](tool/screenshots/09_orders_wide.png)
 ![Order detail on tablet / web](tool/screenshots/11_order_detail_wide.png)
+
+| Products | Product form |
+|---|---|
+| ![](tool/screenshots/13_products.png) | ![](tool/screenshots/15_product_form.png) |
+
+![Products on tablet / web](tool/screenshots/14_products_wide.png)
+![Product form on tablet / web](tool/screenshots/16_product_form_wide.png)
+
+| Categories | Banners | Category form |
+|---|---|---|
+| ![](tool/screenshots/17_catalogue.png) | ![](tool/screenshots/19_banners.png) | ![](tool/screenshots/21_category_form.png) |
+
+![Categories on tablet / web](tool/screenshots/18_catalogue_wide.png)
+![Banners on tablet / web, dark](tool/screenshots/20_banners_wide_dark.png)
 
 ## Run
 

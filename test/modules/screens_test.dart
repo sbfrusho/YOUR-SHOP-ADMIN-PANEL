@@ -78,7 +78,7 @@ void main() {
 
       await tester.tap(find.text('Products'));
       await settle(tester);
-      expect(find.textContaining('Sprint 3'), findsOneWidget);
+      expect(find.text('No products yet'), findsOneWidget);
     });
   });
 }

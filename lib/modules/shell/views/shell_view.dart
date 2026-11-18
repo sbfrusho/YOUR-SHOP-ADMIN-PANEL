@@ -4,7 +4,10 @@ import 'package:get/get.dart';
 import '../../../app/routes/app_routes.dart';
 import '../../../core/widgets/app_top_bar.dart';
 import '../../../core/widgets/brand/app_logo.dart';
+import '../../catalogue/views/catalogue_view.dart';
+import '../../dashboard/views/dashboard_view.dart';
 import '../../orders/views/orders_view.dart';
+import '../../products/views/products_view.dart';
 import '../view_models/shell_view_model.dart';
 import 'section_placeholder_view.dart';
 
@@ -57,23 +60,10 @@ class ShellView extends GetView<ShellViewModel> {
   }
 
   Widget _page(AdminSection section) => switch (section) {
-    AdminSection.dashboard => const SectionPlaceholderView(
-      section: AdminSection.dashboard,
-      message:
-          "Today's orders and revenue, pending orders, low stock and best "
-          'sellers arrive in Sprint 5.',
-    ),
+    AdminSection.dashboard => const DashboardView(),
     AdminSection.orders => const OrdersView(),
-    AdminSection.products => const SectionPlaceholderView(
-      section: AdminSection.products,
-      message:
-          'Create, edit and archive products with images, sizes and sale '
-          'prices in Sprint 3.',
-    ),
-    AdminSection.catalogue => const SectionPlaceholderView(
-      section: AdminSection.catalogue,
-      message: 'Categories and home banners arrive in Sprint 4.',
-    ),
+    AdminSection.products => const ProductsView(),
+    AdminSection.catalogue => const CatalogueView(),
     AdminSection.customers => const SectionPlaceholderView(
       section: AdminSection.customers,
       message: 'Customers and their order history arrive in Sprint 6.',

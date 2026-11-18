@@ -84,6 +84,16 @@ class OrdersViewModel extends GetxController {
     filter.value = const OrderFilter();
   }
 
+  /// Clears every filter, then shows only [status] and [payment] (used by
+  /// the dashboard shortcuts).
+  void showOnly({
+    OrderStatus? status,
+    PaymentFilter payment = PaymentFilter.any,
+  }) {
+    clearFilters();
+    filter.value = OrderFilter(status: status, payment: payment);
+  }
+
   void open(OrderModel order) =>
       Get.toNamed<void>(AppRoutes.orderDetailFor(order.id));
 

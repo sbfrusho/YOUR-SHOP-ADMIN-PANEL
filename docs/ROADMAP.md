@@ -56,21 +56,41 @@ tests passing.
   including Shipped orders (returned parcels). Without `FUNCTIONS_BASE_URL`
   the Cancel button is disabled with an explanation.
 
-### Sprint 3: Products
+### Sprint 3: Products (done)
 - Product list (table or list) with search, category filter, stock filter.
 - Create and edit: images to Firebase Storage, sizes, full price, sale
   percentage with computed sale price, stock, delivery time, category.
   Writes legacy string formats.
 - Archive instead of delete (`isArchived`; customer app hides archived
   products, which needs a small change and rule test in the customer repo).
+- Notes: re-saving a legacy product keeps its stored sale price unless the
+  full price or percentage changes. Removed images stay in Storage (not
+  deleted) so nothing an old order shows can break. Customer repo: storage
+  rules let admins upload to `products/`, `categories/`, `banners/`;
+  `placeOrder` refuses archived products.
 
-### Sprint 4: Categories and banners
+### Sprint 4: Categories and banners (done)
 - CRUD with image upload. Prevent deleting a category that still has
   products. Banner ordering.
+- Notes: Catalogue has Categories and Banners tabs. A category needs a
+  name (unique, ignoring case) and an image. Renaming one also updates the
+  `categoryName` copy on its products. Delete is refused while any product,
+  archived included, uses it. Banners gain a numeric `sortOrder`, reordered
+  by drag or Move up/down; legacy banners get numbers on the first add or
+  reorder. Removed images stay in Storage. Customer repo: the home carousel
+  sorts by `sortOrder`, plus rules tests for categories and banners.
 
-### Sprint 5: Dashboard
+### Sprint 5: Dashboard (done)
 - Today's orders and revenue, pending orders, low stock, best sellers (last
   30 days), a simple revenue chart.
+- Notes: a **sale** is an order that isn't cancelled and is cash on delivery
+  or paid; card orders awaiting payment (they may expire), void and refunded
+  orders don't count. "To confirm" and "To ship" cover open orders of any
+  age; unpaid card orders are shown apart. The chart covers 14 days (local
+  calendar days). Best sellers read each recent order's items once and
+  cache them; past a few thousand orders a month, a Cloud Function keeping
+  daily totals would be cheaper. Tiles open the matching filtered orders or
+  products. No new indexes, rules or functions.
 
 ### Sprint 6: Customers
 - Read-only customer list with search, detail with order history.

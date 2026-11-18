@@ -1,16 +1,23 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:your_shop_admin/app/routes/app_pages.dart';
 import 'package:your_shop_admin/app/routes/app_routes.dart';
 import 'package:your_shop_admin/core/services/auth_service.dart';
+import 'package:your_shop_admin/core/services/functions_client.dart';
 import 'package:your_shop_admin/core/services/session_service.dart';
 import 'package:your_shop_admin/core/services/theme_service.dart';
 import 'package:your_shop_admin/core/theme/app_theme.dart';
 import 'package:your_shop_admin/data/repositories/auth_repository.dart';
+import 'package:your_shop_admin/data/repositories/order_repository.dart';
 
 /// Real services and repositories on Firebase fakes.
 class TestBackend {
@@ -30,10 +37,89 @@ class TestBackend {
   final db = FakeFirebaseFirestore();
   final MockFirebaseAuth auth;
 
+  /// Requests sent to the Cloud Functions.
+  final calls = <http.Request>[];
+
+  /// Fake `adminCancelOrder`: marks the order cancelled like the server.
+  late final functions = FunctionsClient(
+    baseUrl: 'https://functions.test',
+    auth: auth,
+    client: MockClient((req) async {
+      calls.add(req);
+      final id = (jsonDecode(req.body) as Map)['orderId'] as String;
+      await db.collection('orders').doc(id).update({
+        'status': 'Cancelled',
+        'paymentStatus': 'void',
+        'cancelledBy': 'admin',
+      });
+      return http.Response('{"cancelled":true,"refunded":false}', 200);
+    }),
+  );
+
+  /// Adds an order (and its items) and returns its ID.
+  Future<String> addOrder({
+    String id = 'order1abc',
+    String status = 'Pending',
+    String paymentStatus = 'unpaid',
+    String name = 'Nusrat Jahan',
+    String phone = '01712-345678',
+    double total = 2540,
+    DateTime? createdAt,
+    bool customerDeleted = false,
+    List<Map<String, dynamic>> items = const [
+      {
+        'product_id': 'p1',
+        'product_name': 'Linen Overshirt',
+        'price': '1890',
+        'quantity': 1,
+        'size': 'M',
+        'product_image': '',
+      },
+      {
+        'product_id': 'p2',
+        'product_name': 'Everyday Cap',
+        'price': '650',
+        'quantity': 1,
+        'size': '',
+        'product_image': '',
+      },
+    ],
+  }) async {
+    final ref = db.collection('orders').doc(id);
+    await ref.set({
+      'customerId': 'c1',
+      'uniqueId': customerDeleted
+          ? ''
+          : '${name.split(' ').first.toLowerCase()}@mail.test',
+      'customerName': customerDeleted ? '' : name,
+      'customerPhone': customerDeleted ? '' : phone,
+      'customerAddress': customerDeleted
+          ? ''
+          : 'House 12, Road 5, Dhanmondi, Dhaka 1205',
+      'paymentMethod': 'Cash on Delivery',
+      'paymentStatus': paymentStatus,
+      'paymentGateway': 'cod',
+      'deliveryTime': '2–4 working days',
+      'deliveryType': 'Home delivery',
+      'totalPrice': total,
+      'status': status,
+      'customerDeleted': customerDeleted,
+      'createdAt': Timestamp.fromDate(createdAt ?? DateTime(2026, 11, 18, 10)),
+    });
+    for (final (i, item) in items.indexed) {
+      await ref.collection('items').doc('i$i').set(item);
+    }
+    return id;
+  }
+
   Future<void> register() async {
     SharedPreferences.setMockInitialValues({});
     Get.put(await ThemeService().init(), permanent: true);
     Get.put(AuthRepository(auth: auth, firestore: db), permanent: true);
+    Get.put(
+      OrderRepository(firestore: db, functions: functions),
+      permanent: true,
+    );
     final authService = Get.put(AuthService(auth: auth), permanent: true);
     Get.put(SessionService(authService, Get.find()), permanent: true);
   }

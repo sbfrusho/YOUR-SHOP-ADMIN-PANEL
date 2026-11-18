@@ -27,7 +27,7 @@ tests passing.
 
 ## Sprints
 
-### Sprint 1: Foundation and sign-in
+### Sprint 1: Foundation and sign-in (done)
 - New pubspec (current Firebase and GetX, same versions as the customer app),
   lints, fonts, design system and shared widgets copied from the customer app.
 - MVVM folder layout, `AppConfig`, `FirestorePaths`, `AppException`,
@@ -42,7 +42,7 @@ tests passing.
 - Tests (repositories, view models, middleware, widget), the golden
   screenshot harness and CI (format, analyze, test, app bundle, web).
 
-### Sprint 2: Orders
+### Sprint 2: Orders (done)
 - Live order list with filters (status, payment status, date range) and
   search (name, phone, email, order ID). Data table on wide screens.
 - Order detail: items, customer and address, payment, status timeline.
@@ -51,6 +51,10 @@ tests passing.
   steps are offered.
 - **Customer repo:** `adminCancelOrder` Cloud Function (restock, Stripe
   refund, `cancelledBy: 'admin'`) and its tests.
+- Notes: the list keeps the newest 500 orders live and filters in memory
+  (no composite indexes needed). Admins may cancel until Delivered,
+  including Shipped orders (returned parcels). Without `FUNCTIONS_BASE_URL`
+  the Cancel button is disabled with an explanation.
 
 ### Sprint 3: Products
 - Product list (table or list) with search, category filter, stock filter.

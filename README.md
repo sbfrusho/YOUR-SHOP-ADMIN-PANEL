@@ -12,7 +12,12 @@ Cloud Functions. Only accounts with `users/{uid}.isAdmin == true` can sign in.
 |---|---|---|
 | ![](tool/screenshots/01_login.png) | ![](tool/screenshots/03_shell.png) | ![](tool/screenshots/05_settings.png) |
 
-![Tablet / web](tool/screenshots/04_shell_wide.png)
+| Orders | Order detail |
+|---|---|
+| ![](tool/screenshots/08_orders.png) | ![](tool/screenshots/10_order_detail.png) |
+
+![Orders on tablet / web](tool/screenshots/09_orders_wide.png)
+![Order detail on tablet / web](tool/screenshots/11_order_detail_wide.png)
 
 ## Run
 

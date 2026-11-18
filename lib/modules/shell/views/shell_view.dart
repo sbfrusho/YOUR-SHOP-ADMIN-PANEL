@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../app/routes/app_routes.dart';
 import '../../../core/widgets/app_top_bar.dart';
 import '../../../core/widgets/brand/app_logo.dart';
+import '../../orders/views/orders_view.dart';
 import '../view_models/shell_view_model.dart';
 import 'section_placeholder_view.dart';
 
@@ -62,12 +63,7 @@ class ShellView extends GetView<ShellViewModel> {
           "Today's orders and revenue, pending orders, low stock and best "
           'sellers arrive in Sprint 5.',
     ),
-    AdminSection.orders => const SectionPlaceholderView(
-      section: AdminSection.orders,
-      message:
-          'Live orders with filters, details and status changes arrive in '
-          'Sprint 2.',
-    ),
+    AdminSection.orders => const OrdersView(),
     AdminSection.products => const SectionPlaceholderView(
       section: AdminSection.products,
       message:

@@ -1,8 +1,12 @@
 import 'package:get/get.dart';
 
+import '../../data/repositories/order_repository.dart';
 import '../../modules/auth/bindings/auth_bindings.dart';
 import '../../modules/auth/views/forgot_password_view.dart';
 import '../../modules/auth/views/login_view.dart';
+import '../../modules/orders/view_models/order_detail_view_model.dart';
+import '../../modules/orders/view_models/orders_view_model.dart';
+import '../../modules/orders/views/order_detail_view.dart';
 import '../../modules/settings/view_models/settings_view_model.dart';
 import '../../modules/settings/views/settings_view.dart';
 import '../../modules/shell/view_models/shell_view_model.dart';
@@ -32,7 +36,10 @@ abstract final class AppPages {
     GetPage<void>(
       name: AppRoutes.shell,
       page: ShellView.new,
-      binding: BindingsBuilder.put(ShellViewModel.new),
+      binding: BindingsBuilder(() {
+        Get.put(ShellViewModel());
+        Get.put(OrdersViewModel(Get.find()));
+      }),
       middlewares: [AdminMiddleware()],
     ),
     GetPage<void>(
@@ -40,6 +47,17 @@ abstract final class AppPages {
       page: SettingsView.new,
       binding: BindingsBuilder.put(
         () => SettingsViewModel(Get.find(), Get.find()),
+      ),
+      middlewares: [AdminMiddleware()],
+    ),
+    GetPage<void>(
+      name: AppRoutes.orderDetail,
+      page: OrderDetailView.new,
+      binding: BindingsBuilder.put(
+        () => OrderDetailViewModel(
+          Get.find<OrderRepository>(),
+          Get.parameters['id'] ?? '',
+        ),
       ),
       middlewares: [AdminMiddleware()],
     ),

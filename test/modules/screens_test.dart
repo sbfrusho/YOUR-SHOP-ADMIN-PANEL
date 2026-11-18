@@ -66,7 +66,7 @@ void main() {
 
       await tester.tap(find.text('Orders'));
       await settle(tester);
-      expect(find.textContaining('Sprint 2'), findsOneWidget);
+      expect(find.text('No orders yet'), findsOneWidget);
     });
 
     testWidgets('tablets and web use the side rail', (tester) async {

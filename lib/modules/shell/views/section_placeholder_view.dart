@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../../../app/routes/app_routes.dart';
 import '../../../core/widgets/app_top_bar.dart';
 import '../../../core/widgets/state_views.dart';
 import '../view_models/shell_view_model.dart';
+import 'settings_button.dart';
 
 /// Page shell for an area that is not built yet: large serif title, the
 /// settings button on phones, and what is coming.
@@ -20,19 +19,10 @@ class SectionPlaceholderView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final wide =
-        MediaQuery.sizeOf(context).width >= ShellViewModel.wideBreakpoint;
     return Scaffold(
       appBar: AppTopBar.large(
         title: section.label,
-        actions: [
-          if (!wide)
-            AppIconButton(
-              icon: Icons.settings_outlined,
-              tooltip: 'Settings',
-              onPressed: () => Get.toNamed<void>(AppRoutes.settings),
-            ),
-        ],
+        actions: const [SettingsButton()],
       ),
       body: EmptyView(
         icon: section.icon,

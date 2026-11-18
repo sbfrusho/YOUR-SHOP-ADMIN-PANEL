@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    name: App (analyze, test, build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.9
+          cache: true
+
+      - name: Install packages
+        run: flutter pub get
+
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed lib test tool
+
+      - name: Analyze
+        run: flutter analyze
+
+      # Golden screenshots in tool/ render fonts differently on Linux, so
+      # they are run locally, not here.
+      - name: Test
+        run: flutter test --coverage
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/lcov.info
+
+      - name: Build web
+        run: flutter build web --release --dart-define-from-file=env/example.json
+
+      - name: Upload web build
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-release
+          path: build/web
+          retention-days: 7
+
+      - name: Prepare google-services.json (CI only)
+        run: python3 tool/ci/patch_google_services.py
+
+      # Signed with the debug key unless key.properties exists, so this
+      # proves the release build compiles; it is not the Play upload.
+      - name: Build app bundle
+        run: flutter build appbundle --release --dart-define-from-file=env/example.json
+
+      - name: Upload app bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 7

@@ -1,0 +1,7 @@
+{
+  "APP_ENV": "dev",
+  "CURRENCY": "BDT",
+  "CURRENCY_SYMBOL": "Tk",
+  "FUNCTIONS_BASE_URL": "",
+  "LOW_STOCK_THRESHOLD": "5"
+}
